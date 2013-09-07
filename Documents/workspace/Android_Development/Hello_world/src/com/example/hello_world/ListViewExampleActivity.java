@@ -1,5 +1,7 @@
 package com.example.hello_world;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,25 +33,30 @@ public class ListViewExampleActivity extends Activity {
         "Android", "iPhone", "WindowsMobile" };
 
     final ArrayList<String> list = new ArrayList<String>();
-    ContentValues values1 = new ContentValues();
-    for (int i = 0; i < values.length; ++i) {
-    	values1.put("name", values[i]);
-    	values1.put("num", i);
-    }	
+    ContentValues[] values1 = new ContentValues[values.length];
+    
+    for (int i = 0; i < values.length; i++) {
+    	values1[i] = new ContentValues();
+    	values1[i].put("col_1", values[i]);
+    	values1[i].put("col_2", i);
+    	
     	long newRowId;
     	newRowId = qdb.insert(
-    	         "test_table",
-    	         "name",
-    	         values1);
-    
-    
-    for (int i = 0; i < values.length; ++i) {
-    	String[] stuff = new String[1];
-    	stuff[0] = "name";
-    	Cursor recordSet = qdb.query(false, "test_table", stuff, "num", stuff, "1", null, null, null, null);
-    	String add = recordSet.getString(recordSet.getPosition());
-    	list.add(add);
+    			"test_table",
+    			null,
+    	         values1[i]);
     }
+    
+    int count = 0;
+    Cursor recordSet = qdb.rawQuery("SELECT * FROM test_table", null);
+    recordSet.moveToFirst();
+    while (count < values.length) {
+	    String add = recordSet.getString(recordSet.getColumnIndexOrThrow("col_1"));
+	    list.add(add);
+	    recordSet.moveToNext();
+	    count += 1;
+    }
+    
     
     
     final StableArrayAdapter adapter = new StableArrayAdapter(this,

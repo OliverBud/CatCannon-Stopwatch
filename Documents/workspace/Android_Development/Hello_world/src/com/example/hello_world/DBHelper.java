@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class Database extends SQLiteOpenHelper {
 	 
-    final static int DB_VERSION = 1;
+    final static int DB_VERSION = 2;
     final static String DB_NAME = "test_database";
     Context context;
      
@@ -26,6 +26,8 @@ class Database extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
+		arg0.execSQL("DROP TABLE IF EXISTS test_table");
+	    onCreate(arg0);
 		
 	}
 	
