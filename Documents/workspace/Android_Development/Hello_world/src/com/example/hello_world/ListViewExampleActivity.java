@@ -15,7 +15,8 @@ import android.widget.*;
 
 public class ListViewExampleActivity extends Activity {
 
-  @Override
+  @SuppressWarnings("null")
+@Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_listviewexampleactivity);
@@ -31,25 +32,32 @@ public class ListViewExampleActivity extends Activity {
         "Android", "iPhone", "WindowsMobile" };
 
     final ArrayList<String> list = new ArrayList<String>();
-    ContentValues values1 = new ContentValues();
+    ContentValues[] values1 = new ContentValues[values.length];
+   
+   
     for (int i = 0; i < values.length; ++i) {
-    	values1.put("name", values[i]);
-    	values1.put("num", i);
-    }	
+    	values1[i] = new ContentValues();
+    	values1[i].put("col_1", values[i]);
+    	values1[i].put("col_2", i);
+    	
     	long newRowId;
     	newRowId = qdb.insert(
     	         "test_table",
-    	         "name",
-    	         values1);
-    
-    
-    for (int i = 0; i < values.length; ++i) {
-    	String[] stuff = new String[1];
-    	stuff[0] = "name";
-    	Cursor recordSet = qdb.query(false, "test_table", stuff, "num", stuff, "1", null, null, null, null);
-    	String add = recordSet.getString(recordSet.getPosition());
-    	list.add(add);
+    	         null,
+    	         values1[i]);
     }
+    
+    int colNum = 0;
+   
+    	Cursor recordSet = qdb.rawQuery("SELECT col_1 FROM test_table ", null);
+    	recordSet.moveToFirst();
+    	
+    	for(int r = 0; r < values.length; r ++){
+    		colNum = recordSet.getColumnIndexOrThrow("col_1");
+    		String add = recordSet.getString(colNum);
+    		recordSet.moveToNext();
+    		list.add(add);
+    	}
     
     
     final StableArrayAdapter adapter = new StableArrayAdapter(this,
@@ -105,8 +113,8 @@ public class ListViewExampleActivity extends Activity {
 
   private SQLiteDatabase openDB(){
 		Database db = new Database(this);
-  	SQLiteDatabase qdb = db.getWritableDatabase();
-  	return qdb;
+		SQLiteDatabase qdb = db.getWritableDatabase();
+		return qdb;
   	
 	}
   
