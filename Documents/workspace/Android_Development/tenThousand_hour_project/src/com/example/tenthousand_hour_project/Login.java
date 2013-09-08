@@ -42,7 +42,7 @@ public class Login extends Activity {
 			String password = password_text.getText().toString();
 
 			Cursor nameQuery = qdb.rawQuery("SELECT password FROM user_table WHERE userName = '" + name + "'", null);
-			if (nameQuery.getCount() == 0){
+			if (nameQuery.getCount() < 1){
 				ContentValues newUser = new ContentValues();
 				newUser.put("userName", name);
 				newUser.put("password", password);
@@ -54,14 +54,16 @@ public class Login extends Activity {
 				switchActivity();
 			}
 			else{
-				if (nameQuery.toString() == password){
+				if (nameQuery.toString().equals(password)){
 					ContentValues userContent = new ContentValues();
 					userContent.put("active", 1);
 					long rowId;
 					rowId = qdb.update("user_table", userContent, "user_name=" + name, null);
 					switchActivity();
 				}
-			
+				else{
+					switchActivity();
+				}
 			
 			}
 			
