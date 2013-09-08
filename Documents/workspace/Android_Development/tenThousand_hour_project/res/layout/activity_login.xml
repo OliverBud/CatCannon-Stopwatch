@@ -8,27 +8,43 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Login" >
 
-   <LinearLayout
-        	android:layout_width="fill_parent" 
-              android:layout_height="fill_parent" 
+  
+   
+   		<LinearLayout
+   		      android:id="@+id/words"
+        	  android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
               android:orientation="horizontal" >
-    <EditText
-        android:id="@+id/name_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/login_name" />
+  			  <EditText
+       			 android:id="@+id/name_box"
+      			  android:layout_width="wrap_content"
+      			  android:layout_height="wrap_content"
+      			  android:hint="@string/login_name" />
 
-    <EditText
-        android:id="@+id/password_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/login_password" />
-    </LinearLayout>
+   			 <EditText
+      			  android:id="@+id/password_box"
+      			  android:layout_width="wrap_content"
+      			  android:layout_height="wrap_content"
+      			  android:hint="@string/login_password" />
+    	</LinearLayout>
     
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login_button" />
+   		<LinearLayout
+   		      android:id="@+id/button_display"
+   		      android:layout_below="@id/words"
+        	  android:layout_width="wrap_content" 
+              android:layout_height="wrap_content" 
+              android:orientation="horizontal" >
+   			<Button
+        		android:id="@+id/login_button"
+       			 android:layout_width="wrap_content"
+       			 android:layout_height="wrap_content"
+       			 android:text="@string/login_button" />
+   			<EditText
+      			  android:id="@+id/DB_display"
+      			  android:layout_width="wrap_content"
+      			  android:layout_height="wrap_content"
+      			  android:hint="@string/hello_world" />
+		</LinearLayout>   		
 
+  
 </RelativeLayout>

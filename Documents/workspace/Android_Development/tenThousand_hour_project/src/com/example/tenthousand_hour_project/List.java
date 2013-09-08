@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.Editable;
 import android.view.Menu;
+import android.widget.EditText;
+
 
 public class List extends Activity {
 
@@ -18,7 +20,9 @@ public class List extends Activity {
 		Cursor nameRecord = qdb.rawQuery("SELECT userName from user_table Where active = '1'", null);
 		nameRecord.moveToFirst();
 		String display = nameRecord.getString(nameRecord.getColumnIndexOrThrow("userName"));
-		
+    	EditText display_text = (EditText) findViewById(R.id.display_text);
+    	display_text.setText(display);
+
 	}
 
 	@Override
@@ -27,6 +31,10 @@ public class List extends Activity {
 		getMenuInflater().inflate(R.menu.list, menu);
 		return true;
 	}
+	
+	
+	
+	
 	
 	private SQLiteDatabase openDB(){
 		Database db = new Database(this);

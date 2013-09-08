@@ -15,6 +15,7 @@ class Database extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
         // Store the context for later use
         this.context = context;
+        
     }
 
 	@Override
@@ -26,6 +27,7 @@ class Database extends SQLiteOpenHelper {
 		dummyContent.put("password", "pass");
 		dummyContent.put("user_id", 0);
 		dummyContent.put("active", 0);
+		arg0.insert("user_table", null, dummyContent);
 
 		
 	}
