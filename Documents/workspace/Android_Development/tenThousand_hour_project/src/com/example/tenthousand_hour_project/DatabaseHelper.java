@@ -28,6 +28,20 @@ class Database extends SQLiteOpenHelper {
 		dummyContent.put("user_id", 0);
 		dummyContent.put("active", 0);
 		arg0.insert("user_table", null, dummyContent);
+		
+		
+		ContentValues dummyActivities = new ContentValues();
+		dummyActivities.put("activity_name", "waterboarding");
+		dummyActivities.put("activity_time", 10);
+		dummyActivities.put("user_id", 0);
+		arg0.insert("activity_table", null, dummyActivities);
+		
+		ContentValues dummyActivities2 = new ContentValues();
+		dummyActivities2.put("activity_name", "cooking");
+		dummyActivities2.put("activity_time", 9);
+		dummyActivities2.put("user_id", 0);
+		arg0.insert("activity_table", null, dummyActivities2);
+		
 
 		
 	}

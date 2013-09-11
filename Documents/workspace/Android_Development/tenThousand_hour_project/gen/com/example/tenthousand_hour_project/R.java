@@ -27,11 +27,11 @@ public final class R {
         public static final int DB_display=0x7f080007;
         public static final int action_settings=0x7f08000b;
         public static final int button_display=0x7f080005;
-        public static final int display_text=0x7f080000;
+        public static final int display_text=0x7f080001;
         public static final int editText1=0x7f080008;
         public static final int editText2=0x7f080009;
-        public static final int listView1=0x7f08000a;
-        public static final int listview=0x7f080001;
+        public static final int list=0x7f08000a;
+        public static final int listview=0x7f080000;
         public static final int login_button=0x7f080006;
         public static final int name_box=0x7f080003;
         public static final int password_box=0x7f080004;

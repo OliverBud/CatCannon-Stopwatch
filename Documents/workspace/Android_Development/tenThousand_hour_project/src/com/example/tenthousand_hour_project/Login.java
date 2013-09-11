@@ -60,11 +60,14 @@ public class Login extends Activity {
 				//switchActivity();
 			}
 			else{
-				if (nameQuery.toString().equals(password)){
+				nameQuery.moveToFirst();
+				String realPass = nameQuery.getString(nameQuery.getColumnIndexOrThrow("password"));
+				if (realPass.equals(password)){
 					ContentValues userContent = new ContentValues();
 					userContent.put("active", 1);
-					long rowId;
-					rowId = qdb.update("user_table", userContent, "user_name=" + name, null);
+					String where = "userName=?";
+					String[] whereArgs = new String[] {name};
+					qdb.update("user_table", userContent, where, whereArgs);
 					switchActivity();
 				}
 				else{
