@@ -8,9 +8,40 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".Stopwatch" >
 
-    <TextView
+    <Button
+        android:id="@+id/start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="14dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/stop_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/start_button"
+        android:layout_alignBottom="@+id/start_button"
+        android:layout_alignParentRight="true"
+        android:text="Button" />
+
+    <TextView
+        android:id="@+id/small_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/stop_button"
+        android:layout_alignBottom="@+id/stop_button"
+        android:layout_centerHorizontal="true"
+        android:text="TextView" />
+
+    <Chronometer
+        android:id="@+id/timekeeper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:format="%s"
+        android:textSize="40sp" />
 
 </RelativeLayout>
