@@ -30,10 +30,7 @@
             android:name="com.example.tenthousand_hour_project.Stopwatch"
             android:label="@string/title_activity_stopwatch" >
         </activity>
-        <activity
-            android:name="com.example.tenthousand_hour_project.Testing_layout"
-            android:label="@string/title_activity_testing_layout" >
-        </activity>
+        
     </application>
 
 </manifest>
