@@ -79,17 +79,11 @@ public class Login extends Activity {
 	    }
 	};
 	
-//	private SQLiteDatabase openDB(SQLiteDatabase qdb){
-//		Database db = new Database(this);
-//		qdb = db.getWritableDatabase();
-//		displayDB(qdb);
-//		return qdb;
-//  	
-//	}
+
 	
 	public void switchActivity(){
 		Intent intent = new Intent(this, List.class);
-		startActivity(intent);	    
+		this.startActivity(intent);	    
 	}
 	
 	public int findNewId(SQLiteDatabase qdb){
