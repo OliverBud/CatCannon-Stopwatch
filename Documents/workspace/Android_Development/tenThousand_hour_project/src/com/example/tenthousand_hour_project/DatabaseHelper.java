@@ -21,7 +21,7 @@ class Database extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase arg0) {
 		arg0.execSQL("CREATE TABLE user_table(userName TEXT, password TEXT, user_id int, active int)");
-		arg0.execSQL("CREATE TABLE activity_table(user_id int, activity_name TEXT, activity_time real, active int)");
+		arg0.execSQL("CREATE TABLE activity_table(user_id int, activity_name TEXT, activity_time real)");
 		ContentValues dummyContent = new ContentValues();
 		dummyContent.put("userName", "dummy");
 		dummyContent.put("password", "pass");
@@ -34,14 +34,12 @@ class Database extends SQLiteOpenHelper {
 		dummyActivities.put("activity_name", "waterboarding");
 		dummyActivities.put("activity_time", 10);
 		dummyActivities.put("user_id", 0);
-		dummyActivities.put("active", 0);
 		arg0.insert("activity_table", null, dummyActivities);
 		
 		ContentValues dummyActivities2 = new ContentValues();
 		dummyActivities2.put("activity_name", "cooking");
 		dummyActivities2.put("activity_time", 9);
 		dummyActivities2.put("user_id", 0);
-		dummyActivities.put("active", 0);
 		arg0.insert("activity_table", null, dummyActivities2);
 		
 
