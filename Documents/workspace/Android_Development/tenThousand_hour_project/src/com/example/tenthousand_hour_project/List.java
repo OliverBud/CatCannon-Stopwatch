@@ -27,7 +27,9 @@ public class List extends Activity {
 	int active_id;
 	SQLiteDatabase qdb;
 	ArrayList<String> list;
+	ArrayList<activity_summary> real_list;
 	ArrayAdapter adapter;
+	custom_adapter custom;
 	
 	
 	@Override
@@ -59,21 +61,29 @@ public class List extends Activity {
 		individual_name_list.moveToFirst();
 		individual_time_list.moveToFirst();
 		
+		activity_summary summary_data[] = new activity_summary[numRows];
+		
 		for (int row = 0; row < numRows; row ++){
 			name_list[row] = individual_name_list.getString(individual_name_list.getColumnIndexOrThrow("activity_name"));
 			time_list[row] = individual_time_list.getInt(individual_time_list.getColumnIndexOrThrow("activity_time"));
 			individual_name_list.moveToNext();
 			individual_time_list.moveToNext();
+			summary_data[row] = new activity_summary(name_list[row], Integer.toString(time_list[row]));
+		
+		
 		}
 		list = new ArrayList<String>();
 		list.addAll(Arrays.asList(name_list));
+		real_list = new ArrayList<activity_summary>();
+		real_list.addAll(Arrays.asList(summary_data));
 		
+		
+		
+		custom = new custom_adapter(this, R.layout.row_layout, real_list);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
-		activity_list.setAdapter(adapter);
+		activity_list.setAdapter(custom);
 		
 		
-		Cursor nameRecord = qdb.rawQuery("SELECT userName from user_table Where active = '1'", null);
-		nameRecord.moveToFirst();
 		
 		
 
@@ -115,7 +125,8 @@ public class List extends Activity {
 	    	add_activity.put("active", 0);
 	    	qdb.insert("activity_table", null, add_activity);
 	    	list.add(new_name);
-	    	adapter.notifyDataSetChanged();
+	    	real_list.add(new activity_summary(new_name, Integer.toString(0)));
+	    	custom.notifyDataSetChanged();
 	    
 	    }
 	};
@@ -130,7 +141,7 @@ public class List extends Activity {
 	}
 	
 	public void switchActivity(){
-		Intent intent = new Intent(this, Stopwatch.class);
+		Intent intent = new Intent(this, Login.class);
 		startActivity(intent);	    
 	}
 	

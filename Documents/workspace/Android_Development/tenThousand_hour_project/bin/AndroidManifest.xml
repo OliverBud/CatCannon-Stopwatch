@@ -34,6 +34,10 @@
             android:name="com.example.tenthousand_hour_project.Testing_layout"
             android:label="@string/title_activity_testing_layout" >
         </activity>
+        <activity
+            android:name="com.example.tenthousand_hour_project.Fart"
+            android:label="@string/title_activity_fart" >
+        </activity>
     </application>
 
 </manifest>

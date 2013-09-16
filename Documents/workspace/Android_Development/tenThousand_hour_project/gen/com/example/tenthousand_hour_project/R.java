@@ -25,20 +25,19 @@ public final class R {
     }
     public static final class id {
         public static final int DB_display=0x7f080008;
-        public static final int action_settings=0x7f080010;
+        public static final int action_settings=0x7f08000f;
         public static final int button_display=0x7f080006;
-        public static final int editText1=0x7f08000d;
-        public static final int editText2=0x7f08000e;
-        public static final int list=0x7f08000f;
         public static final int listview=0x7f080000;
         public static final int login_button=0x7f080007;
         public static final int name_box=0x7f080004;
+        public static final int name_view=0x7f08000d;
         public static final int new_name_box=0x7f080002;
         public static final int new_name_button=0x7f080001;
         public static final int password_box=0x7f080005;
         public static final int small_text=0x7f08000b;
         public static final int start_button=0x7f080009;
         public static final int stop_button=0x7f08000a;
+        public static final int time_view=0x7f08000e;
         public static final int timekeeper=0x7f08000c;
         public static final int words=0x7f080003;
     }
@@ -46,13 +45,14 @@ public final class R {
         public static final int activity_list=0x7f030000;
         public static final int activity_login=0x7f030001;
         public static final int activity_stopwatch=0x7f030002;
-        public static final int activity_testing_layout=0x7f030003;
+        public static final int row_layout=0x7f030003;
     }
     public static final class menu {
-        public static final int list=0x7f070000;
-        public static final int login=0x7f070001;
-        public static final int stopwatch=0x7f070002;
-        public static final int testing_layout=0x7f070003;
+        public static final int fart=0x7f070000;
+        public static final int list=0x7f070001;
+        public static final int login=0x7f070002;
+        public static final int stopwatch=0x7f070003;
+        public static final int testing_layout=0x7f070004;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -62,6 +62,7 @@ public final class R {
         public static final int login_name=0x7f050003;
         public static final int login_password=0x7f050004;
         public static final int new_name=0x7f050009;
+        public static final int title_activity_fart=0x7f05000a;
         public static final int title_activity_list=0x7f050006;
         public static final int title_activity_stopwatch=0x7f050007;
         public static final int title_activity_testing_layout=0x7f050008;
