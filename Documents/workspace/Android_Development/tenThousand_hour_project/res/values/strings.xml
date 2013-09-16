@@ -10,5 +10,7 @@
     <string name="title_activity_list">List</string>
     <string name="title_activity_stopwatch">Stopwatch</string>
     <string name="title_activity_testing_layout">Testing_layout</string>
+    <string name="new_name">enter name of activity</string>
+    
 
 </resources>

@@ -5,31 +5,49 @@ import java.util.*;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.Editable;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 //import android.widget.EditText;
 import android.widget.ListView;
 
 public class List extends Activity {
-
+	
+	int active_id;
+	SQLiteDatabase qdb;
+	ArrayList<String> list;
+	ArrayAdapter adapter;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		SQLiteDatabase qdb = openDB();
+		qdb = openDB();
+		
+		Button submit_button = (Button) findViewById(R.id.new_name_button);
+		
+		submit_button.setOnClickListener(SubmitListener);
+		
 		
 		
 		Cursor idRecord = qdb.rawQuery("SELECT user_id from user_table Where active = '1'", null);
 		idRecord.moveToFirst();
-		int active_id = idRecord.getInt(idRecord.getColumnIndexOrThrow("user_id"));
+		active_id = idRecord.getInt(idRecord.getColumnIndexOrThrow("user_id"));
 		
 		final ListView activity_list = (ListView) findViewById(R.id.listview);
-		
+		activity_list.setOnItemClickListener(list_listener);
 		
 		Cursor individual_name_list = qdb.rawQuery("SELECT activity_name FROM activity_table WHERE user_id = '" + active_id + "'", null);
 		Cursor individual_time_list = qdb.rawQuery("SELECT activity_time FROM activity_table WHERE user_id = '" + active_id + "'", null);
@@ -47,18 +65,17 @@ public class List extends Activity {
 			individual_name_list.moveToNext();
 			individual_time_list.moveToNext();
 		}
+		list = new ArrayList<String>();
+		list.addAll(Arrays.asList(name_list));
 		
-		activity_list.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, name_list));
+		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+		activity_list.setAdapter(adapter);
 		
 		
 		Cursor nameRecord = qdb.rawQuery("SELECT userName from user_table Where active = '1'", null);
 		nameRecord.moveToFirst();
 		
-		String display = nameRecord.getString(nameRecord.getColumnIndexOrThrow("userName"));
-    	/*
-		EditText display_text = (EditText) findViewById(R.id.display_text);
-    	display_text.setText(display);
-    	*/
+		
 
 	}
 
@@ -69,7 +86,39 @@ public class List extends Activity {
 		return true;
 	}
 	
+	private OnItemClickListener list_listener = new OnItemClickListener(){
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+				long arg3) {
+			ListView act_list = (ListView) findViewById(R.id.listview);
+			String activity_name = (String) act_list.getItemAtPosition(position);
+			ContentValues active_activity = new ContentValues();
+			active_activity.put("active", 1);
+			String where = "activity_name=?";
+			String[] whereArgs= {activity_name};
+			qdb.update("activity_table", active_activity, where, whereArgs);
+			switchActivity();
+			
+		}
+		
+	};
 	
+	private OnClickListener SubmitListener = new OnClickListener() {
+	    public void onClick(View v) {
+	    	EditText new_name_text = (EditText) findViewById(R.id.new_name_box);
+	    	String new_name = new_name_text.getText().toString();
+	    	ContentValues add_activity = new ContentValues();
+	    	add_activity.put("activity_name", new_name);
+	    	add_activity.put("activity_time", 0);
+	    	add_activity.put("user_id", active_id);
+	    	add_activity.put("active", 0);
+	    	qdb.insert("activity_table", null, add_activity);
+	    	list.add(new_name);
+	    	adapter.notifyDataSetChanged();
+	    
+	    }
+	};
 	
 	
 	
@@ -81,7 +130,7 @@ public class List extends Activity {
 	}
 	
 	public void switchActivity(){
-		Intent intent = new Intent(this, List.class);
+		Intent intent = new Intent(this, Stopwatch.class);
 		startActivity(intent);	    
 	}
 	
