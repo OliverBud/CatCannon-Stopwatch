@@ -42,7 +42,7 @@ public class List extends Activity {
 		
 		submit_button.setOnClickListener(SubmitListener);
 		
-		
+	
 		
 		Cursor idRecord = qdb.rawQuery("SELECT user_id from user_table Where active = '1'", null);
 		idRecord.moveToFirst();
@@ -88,6 +88,14 @@ public class List extends Activity {
 		
 
 	}
+	
+	
+	@Override
+    protected void onResume() {
+        super.onResume();
+
+		onCreate(null);
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,13 +110,23 @@ public class List extends Activity {
 		public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 				long arg3) {
 			ListView act_list = (ListView) findViewById(R.id.listview);
-			String activity_name = (String) act_list.getItemAtPosition(position);
+			activity_summary activity_summary = (activity_summary) act_list.getItemAtPosition(position);
+			String activity_name = activity_summary.name;
+			
+			ContentValues resetActive = new ContentValues();
+			resetActive.put("active", 0);
+			qdb.update("activity_table", resetActive, null, null);
+			
+			
 			ContentValues active_activity = new ContentValues();
 			active_activity.put("active", 1);
 			String where = "activity_name=?";
 			String[] whereArgs= {activity_name};
 			qdb.update("activity_table", active_activity, where, whereArgs);
+			
+			
 			switchActivity();
+			
 			
 		}
 		
@@ -141,7 +159,7 @@ public class List extends Activity {
 	}
 	
 	public void switchActivity(){
-		Intent intent = new Intent(this, Login.class);
+		Intent intent = new Intent(this, Timer.class);
 		startActivity(intent);	    
 	}
 	

@@ -38,6 +38,10 @@
             android:name="com.example.tenthousand_hour_project.Fart"
             android:label="@string/title_activity_fart" >
         </activity>
+        <activity
+            android:name="com.example.tenthousand_hour_project.Timer"
+            android:label="@string/title_activity_timer" >
+        </activity>
     </application>
 
 </manifest>

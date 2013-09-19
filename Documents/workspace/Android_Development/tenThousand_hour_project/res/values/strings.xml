@@ -12,5 +12,9 @@
     <string name="title_activity_testing_layout">Testing_layout</string>
     <string name="new_name">enter name of activity</string>
     <string name="title_activity_fart">Fart</string>
-
+    <string name="title_activity_timer">Timer</string>
+    <string name="start">start</string>
+    <string name="stop">stop</string>
+    
+    
 </resources>

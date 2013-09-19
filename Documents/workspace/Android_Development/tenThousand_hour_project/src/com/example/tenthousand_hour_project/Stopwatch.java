@@ -27,12 +27,12 @@ public class Stopwatch extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stopwatch);
 		
-		Button start_button = (Button) findViewById(R.id.start_button);
-		Button stop_button = (Button) findViewById(R.id.stop_button);
-		TextView small_text = (TextView) findViewById(R.id.small_text);
+		//Button start_button = (Button) findViewById(R.id.start_button);
+//		Button stop_button = (Button) findViewById(R.id.stop_button);
+//		TextView small_text = (TextView) findViewById(R.id.small_text);
 		Chronometer timekeeper = (Chronometer) findViewById(R.id.timekeeper);
-		start_button.setOnClickListener(start_listener);
-		stop_button.setOnClickListener(stop_listener);
+//		start_button.setOnClickListener(start_listener);
+//		stop_button.setOnClickListener(stop_listener);
 		
 		Database db = new Database(this);
 		qdb = db.getWritableDatabase();
