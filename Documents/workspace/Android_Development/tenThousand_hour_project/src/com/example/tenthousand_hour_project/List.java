@@ -25,6 +25,7 @@ import android.widget.ListView;
 public class List extends Activity {
 	
 	int active_id;
+	
 	SQLiteDatabase qdb;
 	ArrayList<String> list;
 	ArrayList<activity_summary> real_list;
