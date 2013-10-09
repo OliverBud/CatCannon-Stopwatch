@@ -1,3 +1,9 @@
+/*
+ * Database Opener class. 
+ * We initialize our database name here, create the tables and save to the device
+ * also dummy data created here
+ */
+
 package com.example.tenthousand_hour_project;
 
 import android.content.ContentValues;
@@ -18,8 +24,12 @@ class Database extends SQLiteOpenHelper {
         
     }
 
+    //Will only be called if the Database name from the constructor
+    //does not yet exist on the device
 	@Override
 	public void onCreate(SQLiteDatabase arg0) {
+		
+		//create tables and dummy information
 		arg0.execSQL("CREATE TABLE user_table(userName TEXT, password TEXT, user_id int, active int)");
 		arg0.execSQL("CREATE TABLE activity_table(user_id int, activity_name TEXT, activity_time real, active int)");
 		ContentValues dummyContent = new ContentValues();

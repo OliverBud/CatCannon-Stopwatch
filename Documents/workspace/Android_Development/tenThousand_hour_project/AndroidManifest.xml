@@ -12,7 +12,9 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:debuggable="true"
         android:theme="@style/AppTheme" >
+        
         <activity
             android:name="com.example.tenthousand_hour_project.Login"
             android:label="@string/app_name" >
@@ -23,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.tenthousand_hour_project.List"
+            android:name="com.example.tenthousand_hour_project.List1"
             android:label="@string/title_activity_list" >
         </activity>
         <activity
@@ -39,7 +41,7 @@
             android:label="@string/title_activity_fart" >
         </activity>
         <activity
-            android:name="com.example.tenthousand_hour_project.Timer"
+            android:name="com.example.tenthousand_hour_project.Timer1"
             android:label="@string/title_activity_timer" >
         </activity>
     </application>

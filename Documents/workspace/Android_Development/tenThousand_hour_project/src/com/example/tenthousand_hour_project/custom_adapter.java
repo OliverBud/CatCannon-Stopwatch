@@ -1,3 +1,7 @@
+/*
+ * custom adapter for the ListView
+ */
+
 package com.example.tenthousand_hour_project;
 
 import java.util.ArrayList;
@@ -14,6 +18,9 @@ public class custom_adapter extends ArrayAdapter<activity_summary>{
 
 	Context context;
 	int layoutResourceId;
+	
+	//here is the list of the data we will use to fill the list
+	//stored as activity_summaries
 	ArrayList<activity_summary> data;
 	
 	public custom_adapter(Context context, int layoutResourseID, ArrayList<activity_summary> data){
@@ -30,6 +37,8 @@ public class custom_adapter extends ArrayAdapter<activity_summary>{
 		
 		if(row == null)
         {
+			
+			//call to custom row layout we are using
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(R.layout.row_layout,null);
             
@@ -52,6 +61,7 @@ public class custom_adapter extends ArrayAdapter<activity_summary>{
 		
 	}
 
+	//holder class for the textViews we want to put info into
 	static class custom_holder
 	{
 		TextView name_text;

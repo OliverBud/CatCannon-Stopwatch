@@ -17,16 +17,6 @@
         android:text="0" />
 
     <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chronometer1"
-        android:layout_below="@+id/chronometer1"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="24dp"
-        android:hint="@string/start" />
-
-    <Button
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,5 +24,22 @@
         android:layout_alignBottom="@+id/start"
         android:layout_toRightOf="@+id/start"
         android:hint="@string/stop" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chronometer"
+        android:layout_below="@+id/chronometer"
+        android:hint="@string/start" />
+
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/start"
+        android:layout_alignRight="@+id/stop"
+        android:layout_below="@+id/start"
+        android:text="Chronometer" />
 
 </RelativeLayout>
