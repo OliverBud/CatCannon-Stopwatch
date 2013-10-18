@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_id">120888772625</string>
+    <string name="app_id">551886264881569</string>
     <string name="app_name">tenThousand_hour_project</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello World</string>
@@ -24,6 +24,8 @@
     <string name="yes">yes</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    
+    <string name="empty_string">list empty</string>
     
     
     

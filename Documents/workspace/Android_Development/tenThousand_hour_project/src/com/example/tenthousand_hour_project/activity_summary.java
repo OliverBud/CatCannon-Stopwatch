@@ -9,6 +9,7 @@ public class activity_summary {
 
 	public String name;
 	public String time;
+	
 	public activity_summary(){
 		super();
 	}

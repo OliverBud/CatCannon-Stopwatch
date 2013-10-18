@@ -6,7 +6,7 @@
 
 package com.example.tenthousand_hour_project;
 
-import java.util.*;
+import java.util.*; 
 
 //import org.achartengine.model.TimeSeries;
 
@@ -157,7 +157,6 @@ public class List1 extends Activity {
 	    	add_activity.put("user_id", active_id);
 	    	add_activity.put("active", 0);
 	    	qdb.insert("activity_table", null, add_activity);
-	    	list.add(new_name);
 	    	real_list.add(new activity_summary(new_name, Integer.toString(0)));
 	    	custom.notifyDataSetChanged();
 	    

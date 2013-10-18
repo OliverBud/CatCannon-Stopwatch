@@ -8,7 +8,7 @@
 
 package com.example.tenthousand_hour_project;
 
-import android.os.Bundle;   
+import android.os.Bundle;     
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -24,6 +24,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import com.facebook.*;
+import com.facebook.model.*;
 
  
 public class Login extends FragmentActivity implements LoginDialogFragment.NoticeDialogListener, LoginPasswordDialogFragment.NoticeDialogListener{
@@ -51,6 +55,35 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 		qdb.update("user_table", resetActive, null, null);
 		
 		
+		Session.openActiveSession(this, true, new Session.StatusCallback() {
+
+		    // callback when session changes state
+		    @SuppressWarnings("deprecation")
+			@Override
+		    public void call(Session session, SessionState state, Exception exception) {
+		    	if (session.isOpened()) {
+		    		// make request to the /me API
+		    		Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+
+		    		  // callback after Graph API response with user object
+		    		  @Override
+		    		  public void onCompleted(GraphUser user, Response response) {
+		    			  if (user != null) {
+		    				  TextView welcome = (TextView) findViewById(R.id.welcome);
+		    				  welcome.setText("Hello " + user.getName() + "!");
+		    				}
+		    		  }
+		    		});
+		    	}
+		    }
+		  });
+		
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  super.onActivityResult(requestCode, resultCode, data);
+	  Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	}
 
 	@Override
@@ -71,14 +104,12 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 
 			//Validate Information
 			Cursor nameQuery = qdb.rawQuery("SELECT password FROM user_table WHERE userName = '" + name + "'", null);
-			if (nameQuery.getCount() < 1){
-				
+			if (nameQuery.getCount() < 1){	
 				//if user name invalid, respond with this Dialogue
 				showNameNoticeDialog();
 				
 			}
-			else{
-				
+			else{				
 				nameQuery.moveToFirst();
 				String realPass = nameQuery.getString(nameQuery.getColumnIndexOrThrow("password"));
 				if (realPass.equals(password)){

@@ -20,7 +20,7 @@ public class LoginDialogFragment extends DialogFragment {
      * Each method passes the DialogFragment in case the host needs to query it."
      */
 	
-	//Two buttons here
+	//Two buttons herec
     public interface NoticeDialogListener {
         public void onDialogNamePositiveClick(DialogFragment dialog);
         public void onDialogNameNegativeClick(DialogFragment dialog);

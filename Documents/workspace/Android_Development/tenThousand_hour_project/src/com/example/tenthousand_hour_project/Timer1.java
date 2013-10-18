@@ -87,6 +87,10 @@ public class Timer1 extends Activity{
   	
 	}
 	
+	//public int[] format_milis_to_actual(int milis){
+	//	int[] return_arrya
+	//}
+	
 	//On starting the timer
 	private OnClickListener start_listener = new OnClickListener() {
 	    public void onClick(View v) {
