@@ -8,7 +8,8 @@
 
 package com.example.tenthousand_hour_project;
 
-import android.os.Bundle;     
+import android.net.Uri; 
+import android.os.Bundle;      
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -16,9 +17,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,35 +26,47 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.tenthousand_hour_project.data.Contract;
+import com.example.tenthousand_hour_project.data.Contract.users;
+import com.example.tenthousand_hour_project.data.Database;
 import com.facebook.*;
 import com.facebook.model.*;
 
  
-public class Login extends FragmentActivity implements LoginDialogFragment.NoticeDialogListener, LoginPasswordDialogFragment.NoticeDialogListener{
+public class Login extends Activity implements LoginDialogFragment.NoticeDialogListener, LoginPasswordDialogFragment.NoticeDialogListener{
 
 	Button SubmitButton;
-	SQLiteDatabase qdb;
+	//SQLiteDatabase qdb;
 	int mStackLevel;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+		Log.d("first tag", "content");
+		
 		//Set Handler to listen for the user info submit button
 		SubmitButton = (Button) findViewById(R.id.login_button);
 		SubmitButton.setOnClickListener(SubmitListener);
 		
-		//Initialize database
-		Database db = new Database(this);
-		qdb = db.getWritableDatabase();		
+//		//Initialize database
+//		Database db = new Database(this);
+//		qdb = db.getWritableDatabase();		
+		
 		
 		//set all profiles to inactive. will set the one that logs in to active
 		ContentValues resetActive = new ContentValues();
 		resetActive.put("active", 0);
-		qdb.update("user_table", resetActive, null, null);
 		
-		
+		//qdb.update("user_table", resetActive, null, null);
+		Log.d("cp", "before contentResole");
+
+		int rows_updated = getContentResolver().update(
+				Contract.users.CONTENT_URI,
+				resetActive,
+				null,
+				null);
+		Log.d("cp", "after contentResole");
 		Session.openActiveSession(this, true, new Session.StatusCallback() {
 
 		    // callback when session changes state
@@ -81,6 +93,22 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 	}
 	
 	@Override
+	protected void onResume(){
+		super.onResume();
+		ContentValues resetActive = new ContentValues();
+		resetActive.put("active", 0);
+		
+		//qdb.update("user_table", resetActive, null, null);
+		Log.d("cp", "resume");
+
+		int rows_updated = getContentResolver().update(
+				Contract.users.CONTENT_URI,
+				resetActive,
+				null,
+				null);
+	}
+	
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	  super.onActivityResult(requestCode, resultCode, data);
 	  Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
@@ -103,7 +131,16 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 		
 
 			//Validate Information
-			Cursor nameQuery = qdb.rawQuery("SELECT password FROM user_table WHERE userName = '" + name + "'", null);
+			//Cursor nameQuery = qdb.rawQuery("SELECT password FROM user_table WHERE userName = '" + name + "'", null);
+			String[] projection = {"password"};
+			String where = "user_name = ?";
+			String[] whereArgs = { name };
+			Cursor nameQuery = getContentResolver().query(Contract.users.CONTENT_URI, 
+					projection,
+					where, 
+					whereArgs, 
+					null);
+			
 			if (nameQuery.getCount() < 1){	
 				//if user name invalid, respond with this Dialogue
 				showNameNoticeDialog();
@@ -117,9 +154,13 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 					//if password is valid, set profile activee
 					ContentValues userContent = new ContentValues();
 					userContent.put("active", 1);
-					String where = "userName=?";
-					String[] whereArgs = new String[] {name};
-					qdb.update("user_table", userContent, where, whereArgs);
+					String where_up = "user_name=?";
+					String[] whereArgs_up = new String[] {name};
+					int rowsUpdated = getContentResolver().update(Contract.users.CONTENT_URI,
+							userContent,
+							where_up,
+							whereArgs_up);
+					//qdb.update("user_table", userContent, where_up, whereArgs_up);
 					
 					//move to activity displaying profile information
 					switchActivity();
@@ -143,35 +184,35 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 	}
 	
 	//Helper function to get a new user id when creating new profile
-	public int findNewId(SQLiteDatabase qdb){
-		Cursor idQuery = qdb.rawQuery("SELECT user_id FROM user_table", null);
-		idQuery.moveToLast();
-		int lastIdInt = idQuery.getInt(idQuery.getColumnIndex("user_id"));
-		return lastIdInt + 1;
-	}
-	
-	//for debugging purposes
-	public void displayDB(SQLiteDatabase qdb){
-		Cursor recordSet = qdb.rawQuery("Select * FROM user_table", null);
-		int numRows = recordSet.getCount();
-		recordSet.moveToFirst();
-		String dName;
-		String dPassword;
-		int duser_id;
-		int dactive;
-		String Text;
-		Text = Integer.toString(numRows) + "\n";
-		for (int i = 0; i < numRows; i ++){
-			dName = recordSet.getString(recordSet.getColumnIndexOrThrow("userName"));
-			dPassword = recordSet.getString(recordSet.getColumnIndexOrThrow("password"));
-			duser_id = recordSet.getInt(recordSet.getColumnIndexOrThrow("user_id"));
-			dactive = recordSet.getInt(recordSet.getColumnIndexOrThrow("active"));
-			Text = Text + dName + " " + dPassword + " " + Integer.toString(duser_id) + " " + Integer.toString(dactive) + "\n";	
-			recordSet.moveToNext();
-		}
+//	public int findNewId(SQLiteDatabase qdb){
+//		Cursor idQuery = qdb.rawQuery("SELECT user_id FROM user_table", null);
+//		idQuery.moveToLast();
+//		int lastIdInt = idQuery.getInt(idQuery.getColumnIndex("user_id"));
+//		return lastIdInt + 1;
+//	}
+//	
+//	//for debugging purposes
+//	public void displayDB(SQLiteDatabase qdb){
+//		Cursor recordSet = qdb.rawQuery("Select * FROM user_table", null);
+//		int numRows = recordSet.getCount();
+//		recordSet.moveToFirst();
+//		String dName;
+//		String dPassword;
+//		int duser_id;
+//		int dactive;
+//		String Text;
+//		Text = Integer.toString(numRows) + "\n";
+//		for (int i = 0; i < numRows; i ++){
+//			dName = recordSet.getString(recordSet.getColumnIndexOrThrow("userName"));
+//			dPassword = recordSet.getString(recordSet.getColumnIndexOrThrow("password"));
+//			duser_id = recordSet.getInt(recordSet.getColumnIndexOrThrow("user_id"));
+//			dactive = recordSet.getInt(recordSet.getColumnIndexOrThrow("active"));
+//			Text = Text + dName + " " + dPassword + " " + Integer.toString(duser_id) + " " + Integer.toString(dactive) + "\n";	
+//			recordSet.moveToNext();
+//		}
 		
 		//display_text.setText(Text);
-	}
+//	}
 	
 	
 	//Dialogue for incorrect user name
@@ -226,12 +267,22 @@ public class Login extends FragmentActivity implements LoginDialogFragment.Notic
 		String password = password_text.getText().toString();
     	
     	ContentValues newUser = new ContentValues();
-		newUser.put("userName", name);
+		newUser.put("user_name", name);
 		newUser.put("password", password);
 		newUser.put("active", 1);
-		int newId = findNewId(qdb);
+		String[] projection = {"*"};
+		Cursor user_count = getContentResolver().query(Contract.users.CONTENT_URI,
+				projection,
+				null,
+				null,
+				null);
+		int numUsers = user_count.getCount();
+		int newId = numUsers + 1;
+		
 		newUser.put("user_id", newId);
-		qdb.insert("user_table", null, newUser);   
+		
+		Uri newEntry = getContentResolver().insert(Contract.users.CONTENT_URI, newUser);
+		//qdb.insert("user_table", null, newUser);   
 		switchActivity();
     }
 

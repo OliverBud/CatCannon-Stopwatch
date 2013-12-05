@@ -15,7 +15,10 @@
         android:label="@string/app_name"
         android:debuggable="true"
         android:theme="@style/AppTheme" >
-        
+        <provider
+    	    android:name="com.example.tenthousand_hour_project.data.MyContentProvider"
+    	    android:authorities="com.example.tenthousand_hour_project.provider"
+    	    android:enabled="true" />
         <activity
             android:name="com.example.tenthousand_hour_project.Login"
             android:label="@string/app_name" >
@@ -27,16 +30,25 @@
         </activity>
         <activity
             android:name="com.example.tenthousand_hour_project.List1"
-            android:label="@string/title_activity_list" >
+            android:label="@string/title_activity_list" 
+            android:parentActivityName="com.example.tenthousand_hour_project.Login" >
+        
         </activity>
         <activity
             android:name="com.example.tenthousand_hour_project.Timer1"
-            android:label="@string/title_activity_timer" >
+            android:label="@string/title_activity_timer"
+            android:parentActivityName="com.example.tenthousand_hour_project.List1" >
         </activity>
+        <activity
+            android:name="com.example.tenthousand_hour_project.Add_Item"
+            android:label="@string/title_activity_add_item"
+            android:parentActivityName="com.example.tenthousand_hour_project.List1" >
+        </activity>
+        
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/app_id"/>
         <activity android:name="com.facebook.LoginActivity"></activity>
         
-        <receiver android:name="com.example.tenthousand_hour_project.MyAppWidgetProvider" >
+        <receiver android:name="com.example.tenthousand_hour_project.widget.MyAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.example.tenthousand_hour_project.MyAppWidgetProvider.CUSTOM_ACTION"/>

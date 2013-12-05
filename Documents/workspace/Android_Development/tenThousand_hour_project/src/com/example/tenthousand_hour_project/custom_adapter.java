@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class custom_adapter extends ArrayAdapter<activity_summary>{
@@ -22,19 +23,25 @@ public class custom_adapter extends ArrayAdapter<activity_summary>{
 	//here is the list of the data we will use to fill the list
 	//stored as activity_summaries
 	ArrayList<activity_summary> data;
+	int data_size;
 	
 	public custom_adapter(Context context, int layoutResourseID, ArrayList<activity_summary> data){
 		super(context, layoutResourseID, data);
 		this.context = context;
 		this.layoutResourceId = layoutResourceId;
 		this.data = data;
+		data_size = data.size();
+		
 	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent){
 		View row = convertView;
+	
 		custom_holder holder = null;
 		
+		
+
 		if(row == null)
         {
 			
@@ -60,6 +67,10 @@ public class custom_adapter extends ArrayAdapter<activity_summary>{
 		return row;
 		
 	}
+	
+	static class holder{
+		
+	}
 
 	//holder class for the textViews we want to put info into
 	static class custom_holder
@@ -67,5 +78,9 @@ public class custom_adapter extends ArrayAdapter<activity_summary>{
 		TextView name_text;
 		TextView time_text;
 	}
+	
+	
+	
+	
 	
 }

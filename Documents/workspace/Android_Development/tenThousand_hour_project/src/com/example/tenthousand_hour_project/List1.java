@@ -1,15 +1,13 @@
-/*
- * This activity will always be called from the login activity
- * displays a list of the user's activities with their total time
- * and a button + textView to add new activities
- */
-
 package com.example.tenthousand_hour_project;
 
-import java.util.*; 
+import java.util.*;  
+
+import com.example.tenthousand_hour_project.data.Contract;
+import com.example.tenthousand_hour_project.data.Database;
 
 //import org.achartengine.model.TimeSeries;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -18,8 +16,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -34,7 +35,7 @@ public class List1 extends Activity {
 	
 	int active_id;
 	
-	SQLiteDatabase qdb;
+	//SQLiteDatabase qdb;
 	ArrayList<String> list;
 	ArrayList<activity_summary> real_list;
 	custom_adapter custom;
@@ -45,14 +46,20 @@ public class List1 extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		qdb = openDB();
-		
-		Button submit_button = (Button) findViewById(R.id.new_name_button);
-		submit_button.setOnClickListener(SubmitListener);
+		//qdb = openDB();
+		Log.d("cp", "ListStart");
+		//Button submit_button = (Button) findViewById(R.id.new_name_button);
+		//submit_button.setOnClickListener(SubmitListener);
 		
 	
 		//Load active profile id.
-		Cursor idRecord = qdb.rawQuery("SELECT user_id from user_table Where active = '1'", null);
+		//Cursor idRecord = qdb.rawQuery("SELECT user_id from user_table Where active = '1'", null);
+		String[] projection = {"user_id"};
+		String where = "active = ?";
+		String[] whereArgs = {"1"};
+		Cursor idRecord = getContentResolver().query(Contract.users.CONTENT_URI,
+				projection, where, whereArgs, null);
+		
 		idRecord.moveToFirst();
 		active_id = idRecord.getInt(idRecord.getColumnIndexOrThrow("user_id"));
 		
@@ -61,25 +68,32 @@ public class List1 extends Activity {
 		activity_list.setOnItemClickListener(list_listener);
 		
 		//load activities that this user owns
-		Cursor individual_name_list = qdb.rawQuery("SELECT activity_name FROM activity_table WHERE user_id = '" + active_id + "'", null);
-		Cursor individual_time_list = qdb.rawQuery("SELECT activity_time FROM activity_table WHERE user_id = '" + active_id + "'", null);
+		String[] activities_projection = {"activity_name", "activity_time"};
+		String activities_where = "user_id = ?";
+		String[] activities_whereArgs = {Integer.toString(active_id)};
 		
-		int numRows = individual_name_list.getCount();
+		Cursor activities_cursor = getContentResolver().query(Contract.activities.CONTENT_URI, 
+				activities_projection, 
+				activities_where, 
+				activities_whereArgs, 
+				null);
+		//Cursor individual_name_list = qdb.rawQuery("SELECT activity_name FROM activity_table WHERE user_id = '" + active_id + "'", null);
+		//Cursor individual_time_list = qdb.rawQuery("SELECT activity_time FROM activity_table WHERE user_id = '" + active_id + "'", null);
+		
+		int numRows = activities_cursor.getCount();
 		String[] name_list = new String[numRows];
 		int[] time_list = new int[numRows];
 		
-		individual_name_list.moveToFirst();
-		individual_time_list.moveToFirst();
+		activities_cursor.moveToFirst();
 		
 		//put user activities into wrapper object
 		activity_summary summary_data[] = new activity_summary[numRows];
 		
 		//populate activity collection
 		for (int row = 0; row < numRows; row ++){
-			name_list[row] = individual_name_list.getString(individual_name_list.getColumnIndexOrThrow("activity_name"));
-			time_list[row] = individual_time_list.getInt(individual_time_list.getColumnIndexOrThrow("activity_time"));
-			individual_name_list.moveToNext();
-			individual_time_list.moveToNext();
+			name_list[row] = activities_cursor.getString(activities_cursor.getColumnIndexOrThrow("activity_name"));
+			time_list[row] = activities_cursor.getInt(activities_cursor.getColumnIndexOrThrow("activity_time"));
+			activities_cursor.moveToNext();
 			summary_data[row] = new activity_summary(name_list[row], Integer.toString(time_list[row]));
 		
 		
@@ -114,6 +128,30 @@ public class List1 extends Activity {
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+        
+        case R.id.action_logout:
+            Log.d("button", "i pressed a logout button");
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        case R.id.action_add_item:
+            Log.d("button", "i pressed a plus sign");
+            
+            Intent intent = new Intent(this, Add_Item.class);
+            intent.putExtra("active", active_id);
+            intent.putExtra("activty_id", real_list.size());           
+    		startActivityForResult(intent, 0);	
+    		
+    		
+    		
+        	return true;
+        default:
+            return super.onOptionsItemSelected(item);
+    }
+	}
+	
 	//Click handler for ListView
 	private OnItemClickListener list_listener = new OnItemClickListener(){
 
@@ -129,14 +167,23 @@ public class List1 extends Activity {
 			//set all activities to inactive
 			ContentValues resetActive = new ContentValues();
 			resetActive.put("active", 0);
-			qdb.update("activity_table", resetActive, null, null);
+			
+			int rowsUpdated1 = getContentResolver().update(Contract.activities.CONTENT_URI,
+					resetActive, 
+					null,
+					null);
+			//qdb.update("activity_table", resetActive, null, null);
 			
 			//set user choice activity to active
 			ContentValues active_activity = new ContentValues();
 			active_activity.put("active", 1);
 			String where = "activity_name=?";
 			String[] whereArgs= {activity_name};
-			qdb.update("activity_table", active_activity, where, whereArgs);
+			int rowsUpdated = getContentResolver().update(Contract.activities.CONTENT_URI, 
+					active_activity, 
+					where, 
+					whereArgs);
+			//qdb.update("activity_table", active_activity, where, whereArgs);
 
 			//load timer activity
 			switchActivity();
@@ -156,7 +203,11 @@ public class List1 extends Activity {
 	    	add_activity.put("activity_time", 0);
 	    	add_activity.put("user_id", active_id);
 	    	add_activity.put("active", 0);
-	    	qdb.insert("activity_table", null, add_activity);
+	    	add_activity.put("activity_id", real_list.size());
+
+	    	
+	    	Uri newActivity = getContentResolver().insert(Contract.activities.CONTENT_URI, add_activity);
+	    	//qdb.insert("activity_table", null, add_activity);
 	    	real_list.add(new activity_summary(new_name, Integer.toString(0)));
 	    	custom.notifyDataSetChanged();
 	    
@@ -172,9 +223,10 @@ public class List1 extends Activity {
   	
 	}
 	
+	
 	public void switchActivity(){
 		Intent intent = new Intent(this, Timer1.class);
-		startActivity(intent);	    
+		startActivityForResult(intent, 0);	    
 	}
 	
 	

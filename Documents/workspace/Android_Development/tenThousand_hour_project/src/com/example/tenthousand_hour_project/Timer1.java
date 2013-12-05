@@ -5,8 +5,13 @@
 
 package com.example.tenthousand_hour_project;
 
+import com.example.tenthousand_hour_project.data.Contract;
+import com.example.tenthousand_hour_project.data.Database;
+import com.example.tenthousand_hour_project.data.activities;
+
 import android.os.Bundle; 
 import android.os.SystemClock;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -18,6 +23,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,7 +33,7 @@ import android.widget.EditText;
 public class Timer1 extends Activity{
 	
 	
-	SQLiteDatabase qdb;
+	//SQLiteDatabase qdb;
 	long elapsed;
 	String activity_name;
 	String arctive_activity_name;
@@ -45,18 +51,28 @@ public class Timer1 extends Activity{
 		Chrono.setBase(SystemClock.elapsedRealtime());
 
 		
-		qdb = openDB();
+		//qdb = openDB();
 		
 		//set button listeners
 		start_button.setOnClickListener(start_listener);
 		stop_button.setOnClickListener(stop_listener);
 		
 		//load active activity
-		Cursor active_activity = qdb.rawQuery("SELECT activity_name FROM activity_table " +
-				"WHERE active = 1", null);
+		//Cursor active_activity = qdb.rawQuery("SELECT activity_name FROM activity_table " +"WHERE active = 1", null);
+		String[] projection = {"activity_name"};
+		String where = "active = ?";
+		String[] whereArgs = {"1"};
+		Cursor active_activity = getContentResolver().query(Contract.activities.CONTENT_URI,
+				projection,
+				where,
+				whereArgs,
+				null);
 		active_activity.moveToFirst();
 		int Checking = active_activity.getCount();
 		activity_name = active_activity.getString(0);
+		
+		final ActionBar actionBar = getActionBar();			//MAKE ACTION BAR WITH UP NAVIGATION
+		 actionBar.setDisplayHomeAsUpEnabled(true);
 
 		
 	}
@@ -64,8 +80,15 @@ public class Timer1 extends Activity{
 	@Override
     protected void onResume() {
         super.onResume();
-        Cursor active_activity = qdb.rawQuery("SELECT activity_name FROM activity_table " +
-				"WHERE active = 1", null);
+        String[] projection = {"activity_name"};
+        String where = "active = ?";
+        String[] whereArgs = {"1"};
+       // Cursor active_activity = qdb.rawQuery("SELECT activity_name FROM activity_table " +"WHERE active = 1", null);
+        Cursor active_activity = getContentResolver().query(Contract.activities.CONTENT_URI,
+        		projection,
+        		where,
+        		whereArgs,
+        		null);
 		active_activity.moveToFirst();
 		int Checking = active_activity.getCount();
 		activity_name = active_activity.getString(0);
@@ -77,6 +100,15 @@ public class Timer1 extends Activity{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.timer, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+	    case android.R.id.home:
+	        finish();										
+	    }
+		return super.onOptionsItemSelected(item);
 	}
 	
 	
@@ -118,8 +150,16 @@ public class Timer1 extends Activity{
 			
 			//load the previous time associated with this activity
 			Cursor timespot = null;
-			timespot = qdb.rawQuery("SELECT activity_time FROM activity_table WHERE " +
-					"activity_name = '" + activity_name + "'", null);
+			
+			//timespot = qdb.rawQuery("SELECT activity_time FROM activity_table WHERE " +"activity_name = '" + activity_name + "'", null);
+			String[] projection = {"activity_time"};
+			String where_name = "activity_name = ?";
+			String[] whereArgs_name = {  activity_name };
+			timespot = getContentResolver().query(Contract.activities.CONTENT_URI,
+					projection,
+					where_name,
+					whereArgs_name,
+					null);
 			timespot.moveToFirst();
 			int check = timespot.getCount();
 			
@@ -129,8 +169,12 @@ public class Timer1 extends Activity{
 			update_time.put("activity_time", the_time + elapsed);
 			String where = "activity_name=?";
 			String[] whereArgs = {activity_name};
-			qdb.update("activity_table", update_time, where, whereArgs);
-
+			//qdb.update("activity_table", update_time, where, whereArgs);
+			int rowsUpdated = getContentResolver().update(Contract.activities.CONTENT_URI,
+					update_time,
+					where,
+					whereArgs);
+			
 	    }
 	};
 	
